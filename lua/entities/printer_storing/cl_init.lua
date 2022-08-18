@@ -1,5 +1,7 @@
 include("shared.lua")
 
+surface.CreateFont("Printer_Font", {font = "HUDNumber5", size = 30 })
+
 function ENT:Initialize()
 end
 
@@ -19,8 +21,6 @@ function ENT:Draw()
 	hp = self:GetNWInt( "Health" )
 	cool = self:GetNWInt( "Cooler" )
 	
-	surface.SetFont( "HUDNumber5" )
-	
 	local TextWidth = surface.GetTextSize( owner )
 	local TextWidth2 = surface.GetTextSize( printername )
 	local TextWidth3 = surface.GetTextSize( money )
@@ -39,11 +39,11 @@ function ENT:Draw()
 		draw.RoundedBox( 0, 10, 75, 120, 35, Color( 30, 30, 30, 255 ) )
 		draw.RoundedBox( 0, 10, 75, 120 * (math.Clamp(cool, 0, 100) / 100), 35, Color( 0, 170, 255, 255 ) )
 		
-		draw.DrawText( owner, "HUDNumber5", -TextWidth*0.5, -125, Color( 255, 255, 255 ) )
-		draw.DrawText( printername, "HUDNumber5", -TextWidth2*0.5, -55, Color( 255, 255, 255 ) )
-		draw.DrawText( money, "HUDNumber5", -TextWidth3*0.5, 15, Color( 255, 255, 255 ) )
-		draw.DrawText( hp, "HUDNumber5", -120, 77, Color( 255, 255, 255 ) )
-		draw.DrawText( cool, "HUDNumber5", 15, 77, Color( 255, 255, 255 ) )
+		draw.DrawText( owner, "Printer_Font", 0, -125, Color( 255, 255, 255 ), TEXT_ALIGN_CENTER )
+		draw.DrawText( printername, "Printer_Font", 0, -55, Color( 255, 255, 255 ), TEXT_ALIGN_CENTER )
+		draw.DrawText( money, "Printer_Font", 0, 15, Color( 255, 255, 255 ), TEXT_ALIGN_CENTER )
+		draw.DrawText( hp, "Printer_Font", -120, 77, Color( 255, 255, 255 ) )
+		draw.DrawText( cool, "Printer_Font", 15, 77, Color( 255, 255, 255 ) )
 	cam.End3D2D()
 end
 

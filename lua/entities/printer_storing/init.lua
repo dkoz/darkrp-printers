@@ -2,7 +2,7 @@ AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
 
-ENT.SeizeReward = 950
+ENT.SeizeReward = 750
 
 local PrintMore
 function ENT:Initialize()
@@ -10,14 +10,13 @@ function ENT:Initialize()
 	self:PhysicsInit( SOLID_VPHYSICS )
 	self:SetMoveType( MOVETYPE_VPHYSICS )
 	self:SetSolid( SOLID_VPHYSICS )
+	self:SetColor( Color( 30, 30, 30 ) )
+	self:PrinterSound()
 	local phys = self:GetPhysicsObject()
 	if phys:IsValid() then phys:Wake() end
 	self.damage = 100
 	self.IsMoneyPrinter = true
 	timer.Simple( 10.0, function() PrintMore( self ) end )
-	self.sound = CreateSound(self, Sound("ambient/levels/labs/equipment_printer_loop1.wav"))
-	self.sound:SetSoundLevel(52)
-	self.sound:PlayEx(1, 100)
 	
 	-- Printer Functions
 	self:SetNWInt( "PrintA", 0 )
@@ -33,6 +32,12 @@ function ENT:StartTouch(hitEnt)
 		self:SetNWInt( "Cooler", amount ) 
 		self.Cooler:Remove()
 	end
+end
+
+function ENT:PrinterSound()
+	self.sound = CreateSound(self, Sound("ambient/levels/labs/equipment_printer_loop1.wav"))
+	self.sound:SetSoundLevel(52)
+	self.sound:PlayEx(1, 100)
 end
 
 function ENT:OnTakeDamage(dmg)
@@ -108,6 +113,7 @@ function ENT:CreateMoneybag()
 end
 
 function ENT:Think()
+	self:PrinterSound()
 	local cooler = self:GetNWInt( "Cooler" )
 	if cooler > 100 then
 		self:SetNWInt( "Cooler", 100 )
@@ -130,5 +136,11 @@ function ENT:Use( activator )
 		activator:EmitSound( "ambient/machines/keyboard7_clicks_enter.wav", 50, 100 )
 		DarkRP.notify( activator, 1, 4, "You have collected " .. GAMEMODE.Config.currency .. self:GetNWInt( "PrintA" ) .. " from your printer." )
 		self:SetNWInt( "PrintA", 0 )
+	end
+end
+
+function ENT:OnRemove()
+	if self.sound then
+		self.sound:Stop()
 	end
 end
